@@ -155,17 +155,7 @@
         <div class="line1">Tap below to select an image</div>
         <div class="line2">Works with photos, screenshots, AI-generated faces</div>
       </div>
-      <svg id="imagePreview" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#1A1A2E"/>
-            <stop offset="100%" stop-color="#6C63FF"/>
-          </linearGradient>
-        </defs>
-        <rect width="400" height="280" fill="url(#g)"/>
-        <circle cx="200" cy="110" r="48" fill="#FFFFFE" opacity=".9"/>
-        <path d="M140 230 q60 -70 120 0 Z" fill="#16213E"/>
-      </svg>
+      <img id="imagePreview" alt="Selected photo">
     </div>
 
     <div class="row">
@@ -202,11 +192,15 @@
     </div>
 
     <div class="bottom-pad"></div>
-    <div class="hint">Interactive demo — tap Gallery, then Analyze. Result alternates REAL / FAKE.</div>
+    <div class="hint">Demo: 📁 Gallery opens your real files, 📷 Camera opens the camera — then tap Analyze. Results are simulated.</div>
+    <div class="hint">No image handy? <button id="btnSample" style="background:none;border:none;color:#6C63FF;cursor:pointer;font-size:12px;font-family:inherit;text-decoration:underline;">Use a sample photo</button></div>
     <div class="bottom-pad"></div>
   </div>
   <div id="toast"></div>
 </div>
+
+<input type="file" id="fileGallery" accept="image/*" hidden>
+<input type="file" id="fileCamera" accept="image/*" capture="environment" hidden>
 
 <script>
   const placeholder = document.getElementById('layoutPlaceholder');
@@ -218,27 +212,55 @@
   let imageSelected = false;
   let cycle = 0;
 
+  const SAMPLE_SVG =
+    'data:image/svg+xml;utf8,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="280">' +
+      '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0%" stop-color="#1A1A2E"/><stop offset="100%" stop-color="#6C63FF"/>' +
+      '</linearGradient></defs>' +
+      '<rect width="400" height="280" fill="url(#g)"/>' +
+      '<circle cx="200" cy="110" r="48" fill="#FFFFFE" opacity=".9"/>' +
+      '<path d="M140 230 q60 -70 120 0 Z" fill="#16213E"/>' +
+      '</svg>'
+    );
+
   function showToast(msg) {
     toast.textContent = msg;
     toast.style.display = 'block';
     setTimeout(() => toast.style.display = 'none', 2200);
   }
 
-  document.getElementById('btnGallery').addEventListener('click', () => {
+  function showImage(src) {
     placeholder.style.display = 'none';
+    imagePreview.src = src;
     imagePreview.style.display = 'block';
     imageSelected = true;
     btnAnalyze.disabled = false;
     cardResult.style.display = 'none';
-  });
+  }
 
-  document.getElementById('btnCamera').addEventListener('click', () => {
-    placeholder.style.display = 'none';
-    imagePreview.style.display = 'block';
-    imageSelected = true;
-    btnAnalyze.disabled = false;
-    cardResult.style.display = 'none';
-  });
+  function loadFile(file) {
+    const reader = new FileReader();
+    reader.onload = () => showImage(reader.result);
+    reader.readAsDataURL(file);
+  }
+
+  const fileGallery = document.getElementById('fileGallery');
+  const fileCamera = document.getElementById('fileCamera');
+
+  document.getElementById('btnGallery').addEventListener('click', () => fileGallery.click());
+  document.getElementById('btnCamera').addEventListener('click', () => fileCamera.click());
+
+  function wireFileInput(input) {
+    input.addEventListener('change', () => {
+      if (input.files && input.files[0]) loadFile(input.files[0]);
+      input.value = '';
+    });
+  }
+  wireFileInput(fileGallery);
+  wireFileInput(fileCamera);
+
+  document.getElementById('btnSample').addEventListener('click', () => showImage(SAMPLE_SVG));
 
   btnAnalyze.addEventListener('click', () => {
     if (!imageSelected) { showToast('Select an image first'); return; }

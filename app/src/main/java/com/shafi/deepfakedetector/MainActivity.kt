@@ -1,11 +1,9 @@
 // MainActivity.kt
 package com.shafi.deepfakedetector
 
-import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -50,14 +48,13 @@ class MainActivity : AppCompatActivity() {
         if (success && cameraImageUri != null) {
             selectedImageUri = cameraImageUri
             showSelectedImage(cameraImageUri!!)
+        } else {
+            Toast.makeText(
+                this,
+                "No photo was taken (camera canceled or failed)",
+                Toast.LENGTH_SHORT
+            ).show()
         }
-    }
-
-    private val cameraPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) openCamera()
-        else Toast.makeText(this, "Camera permission required", Toast.LENGTH_SHORT).show()
     }
 
     // ────── Lifecycle ──────
@@ -77,13 +74,11 @@ class MainActivity : AppCompatActivity() {
             galleryLauncher.launch("image/*")
         }
 
+        // TakePicture delegates to the system camera app, so the CAMERA
+        // permission is NOT required here. Requesting it only adds a failure
+        // path (denied -> camera button appears dead), so we launch directly.
         binding.btnCamera.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED) {
-                openCamera()
-            } else {
-                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-            }
+            openCamera()
         }
 
         binding.btnAnalyze.setOnClickListener {
@@ -96,9 +91,23 @@ class MainActivity : AppCompatActivity() {
     // ────── Camera helper ──────
 
     private fun openCamera() {
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            Toast.makeText(
+                this,
+                "No camera found on this device",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
         val photoFile: File? = try {
             createImageFile()
         } catch (ex: IOException) {
+            Toast.makeText(
+                this,
+                "Could not prepare a file for the photo",
+                Toast.LENGTH_LONG
+            ).show()
             null
         }
 
@@ -108,15 +117,29 @@ class MainActivity : AppCompatActivity() {
                 "${packageName}.fileprovider",
                 it
             )
-            cameraLauncher.launch(cameraImageUri)
+            try {
+                cameraLauncher.launch(cameraImageUri)
+            } catch (ex: Exception) {
+                Toast.makeText(
+                    this,
+                    "Could not open the camera app",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 
-    @Throws(IOException::class)
     private fun createImageFile(): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
-        val storageDir: File = getExternalFilesDir(null)!!
-        return File.createTempFile("DEEPFAKE_${timeStamp}_", ".jpg", storageDir)
+        val storageDir: File = getExternalFilesDir(null)
+            ?: throw IOException("External storage not available")
+        val file = File(storageDir, "DEEPFAKE_${timeStamp}.jpg")
+        // Do NOT pre-create the file: some camera apps (e.g. Samsung) fail to
+        // write when the target file already exists as an empty 0-byte file.
+        if (file.exists()) {
+            file.delete()
+        }
+        return file
     }
 
     // ────── UI updates ──────
