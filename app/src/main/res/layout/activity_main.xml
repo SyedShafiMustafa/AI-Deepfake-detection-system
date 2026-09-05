@@ -13,43 +13,181 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Header -->
+        <!-- ═══════ Header ═══════ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="24dp"
-            android:paddingBottom="16dp">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DeepGuard"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-medium"/>
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_logo_badge"
+                android:gravity="center"
+                android:text="🛡"
+                android:textSize="22sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="AI-Powered Deepfake Detector"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp"/>
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DeepGuard"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AI-Powered Deepfake Detector"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp"/>
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- Image Preview Card -->
-        <androidx.cardview.widget.CardView
+        <!-- ═══════ Media mode selector ═══════ -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CHOOSE MEDIA TYPE"
+            android:textColor="@color/colorTextSecondary"
+            android:textSize="11sp"
+            android:letterSpacing="0.14"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnModePhoto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/mode_card_bg"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/mode_card_stroke"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="18dp">
+
+                    <TextView
+                        android:id="@+id/tvModePhotoIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🖼️"
+                        android:textSize="24sp"/>
+
+                    <TextView
+                        android:id="@+id/tvModePhotoLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Photo"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvModePhotoSub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Images &amp; screenshots"
+                        android:textColor="@color/colorTextMuted"
+                        android:textSize="10.5sp"
+                        android:gravity="center"
+                        android:layout_marginTop="2dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnModeVideo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/mode_card_bg"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/mode_card_stroke"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="18dp">
+
+                    <TextView
+                        android:id="@+id/tvModeVideoIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🎬"
+                        android:textSize="24sp"/>
+
+                    <TextView
+                        android:id="@+id/tvModeVideoLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Video"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvModeVideoSub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Clips &amp; recordings"
+                        android:textColor="@color/colorTextMuted"
+                        android:textSize="10.5sp"
+                        android:gravity="center"
+                        android:layout_marginTop="2dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- ═══════ Preview card ═══════ -->
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardPreview"
             android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="16dp"
             app:cardBackgroundColor="@color/colorCard"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp">
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/colorBorder"
+            app:strokeWidth="1dp">
 
-            <RelativeLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -65,29 +203,31 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📸"
-                        android:textSize="48sp"/>
+                        android:text="🕵️"
+                        android:textSize="44sp"/>
 
                     <TextView
+                        android:id="@+id/tvPlaceholderTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tap below to select an image"
-                        android:textColor="@color/colorTextSecondary"
-                        android:textSize="15sp"
+                        android:text="Choose a Photo"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         android:layout_marginTop="12dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Works with photos, screenshots, AI-generated faces"
-                        android:textColor="#5A5A7A"
+                        android:text="Tap Photo or Video above, then pick Camera or Gallery"
+                        android:textColor="@color/colorTextMuted"
                         android:textSize="12sp"
                         android:gravity="center"
-                        android:layout_marginTop="6dp"
-                        android:paddingHorizontal="24dp"/>
+                        android:paddingHorizontal="24dp"
+                        android:layout_marginTop="6dp"/>
                 </LinearLayout>
 
-                <!-- Selected image -->
+                <!-- Selected media -->
                 <ImageView
                     android:id="@+id/imagePreview"
                     android:layout_width="match_parent"
@@ -95,62 +235,65 @@
                     android:scaleType="centerCrop"
                     android:visibility="gone"/>
 
-            </RelativeLayout>
-        </androidx.cardview.widget.CardView>
+                <!-- Source chip -->
+                <TextView
+                    android:id="@+id/tvSourceChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/bg_chip"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:text="GALLERY"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.12"
+                    android:visibility="gone"/>
 
-        <!-- Action Buttons -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp"
-            android:weightSum="2">
+                <!-- Remove selection -->
+                <TextView
+                    android:id="@+id/btnRemove"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/bg_chip"
+                    android:gravity="center"
+                    android:text="✕"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="14sp"
+                    android:visibility="gone"/>
+            </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-            <Button
-                android:id="@+id/btnGallery"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:text="📁  Gallery"
-                android:textColor="@color/colorTextPrimary"
-                android:backgroundTint="@color/colorCard"
-                android:textSize="15sp"
-                style="@style/Widget.MaterialComponents.Button"/>
-
-            <Button
-                android:id="@+id/btnCamera"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:text="📷  Camera"
-                android:textColor="@color/colorTextPrimary"
-                android:backgroundTint="@color/colorCard"
-                android:textSize="15sp"
-                style="@style/Widget.MaterialComponents.Button"/>
-        </LinearLayout>
-
-        <!-- Analyze Button -->
-        <Button
+        <!-- ═══════ Analyze ═══════ -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAnalyze"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="12dp"
-            android:text="🔍  Analyze Image"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorTextPrimary"
-            android:backgroundTint="@color/colorPrimary"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_btn_analyze"
             android:enabled="false"
-            style="@style/Widget.MaterialComponents.Button"/>
+            android:minHeight="58dp"
+            android:stateListAnimator="@null"
+            android:text="🔍  ANALYZE NOW"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null"
+            app:cornerRadius="16dp"/>
 
-        <!-- Server IP input -->
+        <!-- ═══════ Server IP ═══════ -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="14dp"
             app:boxBackgroundColor="@color/colorCard"
+            app:boxCornerRadiusBottomEnd="14dp"
+            app:boxCornerRadiusBottomStart="14dp"
+            app:boxCornerRadiusTopEnd="14dp"
+            app:boxCornerRadiusTopStart="14dp"
             app:boxStrokeColor="@color/colorBorder"
             app:hintTextColor="@color/colorTextSecondary"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -160,90 +303,109 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Server IP (e.g. 192.168.1.5:5000)"
-                android:textColor="@color/colorTextPrimary"
                 android:inputType="text"
-                android:text="10.0.2.2:5000"/>
+                android:text="10.0.2.2:5000"
+                android:textColor="@color/colorTextPrimary"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Loading indicator -->
+        <!-- ═══════ Loading ═══════ -->
         <LinearLayout
             android:id="@+id/layoutLoading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="24dp"
+            android:padding="28dp"
             android:visibility="gone">
 
             <ProgressBar
                 android:id="@+id/progressBar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:indeterminateTint="@color/colorPrimary"/>
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:indeterminateTint="@color/colorAccent"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Analyzing with AI..."
+                android:text="Analyzing media with AI…"
                 android:textColor="@color/colorTextSecondary"
                 android:textSize="14sp"
                 android:layout_marginTop="12dp"/>
         </LinearLayout>
 
-        <!-- Result Card -->
-        <androidx.cardview.widget.CardView
+        <!-- ═══════ Result card ═══════ -->
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:visibility="gone"
             app:cardBackgroundColor="@color/colorCard"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp">
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/colorBorder"
+            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp">
+                android:padding="20dp">
 
-                <!-- Verdict badge -->
+                <!-- Verdict + gauge -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
-                    <TextView
-                        android:id="@+id/tvVerdictEmoji"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="36sp"
-                        android:text="✅"/>
+                    <com.shafi.deepfakedetector.CircularGaugeView
+                        android:id="@+id/gaugeConfidence"
+                        android:layout_width="116dp"
+                        android:layout_height="116dp"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="16dp">
+                        android:layout_marginStart="18dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvVerdictEmoji"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="✅"
+                            android:textSize="30sp"/>
 
                         <TextView
                             android:id="@+id/tvVerdict"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="REAL"
-                            android:textSize="28sp"
+                            android:textColor="@color/colorRealGreen"
+                            android:textSize="24sp"
                             android:textStyle="bold"
-                            android:textColor="@color/colorRealGreen"/>
+                            android:layout_marginTop="2dp"/>
+
+                        <TextView
+                            android:id="@+id/tvStrength"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="HIGH CONFIDENCE"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="10.5sp"
+                            android:letterSpacing="0.1"
+                            android:layout_marginTop="6dp"/>
 
                         <TextView
                             android:id="@+id/tvConfidence"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="94.2% confidence"
+                            android:text="94.2% probability this is REAL"
                             android:textColor="@color/colorTextSecondary"
-                            android:textSize="14sp"/>
+                            android:textSize="12.5sp"
+                            android:layout_marginTop="6dp"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -251,10 +413,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CONFIDENCE SCORE"
+                    android:text="MODEL CONFIDENCE"
                     android:textColor="@color/colorTextSecondary"
                     android:textSize="11sp"
-                    android:letterSpacing="0.1"
+                    android:letterSpacing="0.14"
                     android:layout_marginTop="20dp"/>
 
                 <ProgressBar
@@ -263,21 +425,53 @@
                     android:layout_width="match_parent"
                     android:layout_height="12dp"
                     android:layout_marginTop="8dp"
-                    android:progressDrawable="@drawable/confidence_bar"
                     android:max="100"
-                    android:progress="94"/>
+                    android:progress="0"
+                    android:progressDrawable="@drawable/confidence_bar_green"/>
 
-                <!-- Raw score detail -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="6dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0%"
+                        android:textColor="@color/colorTextMuted"
+                        android:textSize="10sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="50%"
+                        android:textColor="@color/colorTextMuted"
+                        android:textSize="10sp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="100%"
+                        android:textColor="@color/colorTextMuted"
+                        android:textSize="10sp"
+                        android:gravity="end"/>
+                </LinearLayout>
+
+                <!-- Raw score -->
                 <TextView
                     android:id="@+id/tvRawScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Raw model score: 0.9423"
+                    android:text="Model output (raw): 0.9423"
                     android:textColor="@color/colorTextSecondary"
-                    android:textSize="12sp"
+                    android:textSize="11.5sp"
                     android:fontFamily="monospace"
-                    android:layout_marginTop="12dp"/>
+                    android:layout_marginTop="14dp"/>
 
+                <!-- Message -->
                 <TextView
                     android:id="@+id/tvMessage"
                     android:layout_width="match_parent"
@@ -285,15 +479,69 @@
                     android:text="This image appears to be authentic with high confidence."
                     android:textColor="@color/colorTextPrimary"
                     android:textSize="14sp"
-                    android:lineSpacingMultiplier="1.4"
-                    android:layout_marginTop="12dp"
+                    android:lineSpacingMultiplier="1.35"
                     android:background="@drawable/message_bg"
-                    android:padding="12dp"/>
+                    android:padding="14dp"
+                    android:layout_marginTop="12dp"/>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ═══════ History ═══════ -->
+        <LinearLayout
+            android:id="@+id/layoutHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="RECENT SCANS"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.14"/>
+
+                <TextView
+                    android:id="@+id/btnClearHistory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🗑  Clear"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="12sp"
+                    android:padding="6dp"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHistory"
+                android:layout_width="match_parent"
+                android:layout_height="136dp"
+                android:layout_marginTop="10dp"
+                android:clipToPadding="false"
+                android:paddingEnd="20dp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tvHistoryEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No scans yet — analyze a photo or video to build your history."
+                android:textColor="@color/colorTextMuted"
+                android:textSize="12.5sp"
+                android:layout_marginTop="10dp"/>
+        </LinearLayout>
 
         <!-- Bottom padding -->
-        <View android:layout_width="match_parent" android:layout_height="32dp"/>
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="32dp"/>
     </LinearLayout>
 </ScrollView>

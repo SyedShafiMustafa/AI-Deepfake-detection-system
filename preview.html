@@ -7,8 +7,26 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, "Segoe UI", Roboto, sans-serif; }
 
+  :root {
+    --bg: #0A0D0B;
+    --surface: #101412;
+    --card: #151A17;
+    --card-elev: #1B211D;
+    --border: #242C27;
+    --border-strong: #2E3832;
+    --green: #1FA971;
+    --green-bright: #4ADE80;
+    --green-deep: #059669;
+    --green-soft: #14241B;
+    --red: #F87171;
+    --red-deep: #B91C1C;
+    --text: #F1F6F3;
+    --text-2: #96A39B;
+    --text-3: #5C6B62;
+  }
+
   body {
-    background: #0a0912;
+    background: #060807;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -16,125 +34,202 @@
     padding: 24px;
   }
 
-  /* Phone frame */
   .phone {
-    width: 400px;
-    background: #0F0E17;
+    width: 410px;
+    background: var(--bg);
     border-radius: 40px;
-    border: 1px solid #2D2B55;
+    border: 1px solid var(--border-strong);
     box-shadow: 0 20px 60px rgba(0,0,0,.6);
     overflow: hidden;
     position: relative;
   }
-  .notch {
-    height: 28px;
-    background: #0F0E17;
-  }
-  .screen {
-    padding: 20px;
-    max-height: 780px;
-    overflow-y: auto;
-  }
+  .notch { height: 28px; background: var(--bg); }
+  .screen { padding: 20px; max-height: 820px; overflow-y: auto; }
   .screen::-webkit-scrollbar { width: 0; }
 
-  .header { padding: 24px 0 16px; }
-  .title { color: #FFFFFE; font-size: 32px; font-weight: 700; }
-  .subtitle { color: #6C63FF; font-size: 14px; margin-top: 4px; }
+  /* Header */
+  .header { display: flex; align-items: center; padding: 20px 0; }
+  .logo-badge {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--green-soft); border: 1px solid var(--green);
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+  }
+  .header-text { margin-left: 14px; }
+  .title { color: var(--text); font-size: 26px; font-weight: 700; }
+  .subtitle { color: var(--green-bright); font-size: 12px; margin-top: 2px; }
 
-  /* Card */
-  .card {
-    background: #16213E;
-    border-radius: 20px;
-    margin-top: 8px;
+  /* Section label */
+  .section-label { color: var(--text-2); font-size: 11px; letter-spacing: 1.5px; }
+
+  /* Mode cards */
+  .mode-row { display: flex; gap: 8px; margin-top: 10px; }
+  .mode-card {
+    flex: 1; border-radius: 18px; padding: 18px 10px; text-align: center;
+    background: var(--card); border: 1px solid var(--border);
+    cursor: pointer; transition: all .2s ease; user-select: none;
   }
+  .mode-card .m-emoji { font-size: 24px; }
+  .mode-card .m-label { font-size: 16px; font-weight: 700; color: var(--text-2); margin-top: 8px; }
+  .mode-card .m-sub { font-size: 10.5px; color: var(--text-3); margin-top: 2px; }
+  .mode-card.selected { background: var(--green-soft); border-color: var(--green); }
+  .mode-card.selected .m-label { color: var(--green-bright); }
+  .mode-card.selected .m-sub { color: var(--text-2); }
+
+  /* Preview card */
   .preview-card {
-    height: 280px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
+    height: 300px; border-radius: 24px; margin-top: 16px;
+    background: var(--card); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
   }
-  .placeholder { text-align: center; }
-  .placeholder .emoji { font-size: 48px; }
-  .placeholder .line1 { color: #A7A9BE; font-size: 15px; margin-top: 12px; }
-  .placeholder .line2 { color: #5A5A7A; font-size: 12px; margin-top: 6px; padding: 0 24px; }
-  #imagePreview {
-    display: none;
-    width: 100%; height: 100%;
-    object-fit: cover;
+  .placeholder { text-align: center; padding: 0 24px; }
+  .placeholder .emoji { font-size: 44px; }
+  .placeholder .line1 { color: var(--text); font-size: 16px; font-weight: 700; margin-top: 12px; }
+  .placeholder .line2 { color: var(--text-3); font-size: 12px; margin-top: 6px; }
+  #imagePreview { display: none; width: 100%; height: 100%; object-fit: cover; }
+  .chip {
+    position: absolute; top: 12px; left: 12px;
+    background: rgba(10,13,11,.8); border: 1px solid var(--border-strong);
+    color: var(--green-bright); font-size: 10px; letter-spacing: 1.2px;
+    padding: 6px 12px; border-radius: 999px; display: none;
+  }
+  .remove-btn {
+    position: absolute; top: 12px; right: 12px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(10,13,11,.8); border: 1px solid var(--border-strong);
+    color: var(--text); font-size: 14px; cursor: pointer; display: none;
+    font-family: inherit;
   }
 
   /* Buttons */
-  .row { display: flex; gap: 8px; margin-top: 16px; }
-  .btn {
-    flex: 1; height: 56px; border: none; border-radius: 8px;
-    background: #16213E; color: #FFFFFE; font-size: 15px;
-    cursor: pointer; font-family: inherit;
-  }
-  .btn:disabled { opacity: .45; cursor: not-allowed; }
   .btn-primary {
-    width: 100%; height: 60px; margin-top: 12px;
-    background: #6C63FF; color: #FFFFFE;
-    font-size: 17px; font-weight: 700; border: none; border-radius: 8px;
-    cursor: pointer; font-family: inherit;
+    width: 100%; min-height: 58px; margin-top: 16px;
+    background: linear-gradient(90deg, #0E7A44, #1FA971);
+    color: #fff; font-size: 16px; font-weight: 700; border: none;
+    border-radius: 16px; cursor: pointer; font-family: inherit;
   }
-  .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-primary:disabled { background: var(--card-elev); color: var(--text-3); cursor: not-allowed; }
 
   /* Server IP input */
-  .input-wrap { margin-top: 16px; }
-  .input-wrap label { display: block; color: #A7A9BE; font-size: 12px; margin-bottom: 4px; }
+  .input-wrap { margin-top: 14px; }
   .input {
-    width: 100%; height: 48px; background: #16213E; color: #FFFFFE;
-    border: 1px solid #2D2B55; border-radius: 8px; padding: 0 14px; font-size: 14px;
-    font-family: inherit;
+    width: 100%; height: 52px; background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 14px; padding: 0 14px; font-size: 14px;
+    font-family: inherit; outline: none;
   }
-  .input:focus { outline: 1px solid #6C63FF; }
+  .input:focus { border-color: var(--green); }
 
   /* Loading */
-  #layoutLoading { display: none; text-align: center; padding: 24px; }
+  #layoutLoading { display: none; text-align: center; padding: 28px; }
   .spinner {
-    width: 48px; height: 48px; margin: 0 auto;
-    border: 4px solid #2D2B55; border-top-color: #6C63FF;
-    border-radius: 50%; animation: spin 1s linear infinite;
+    width: 46px; height: 46px; margin: 0 auto;
+    border: 4px solid var(--border); border-top-color: var(--green-bright);
+    border-radius: 50%; animation: spin .9s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text { color: #A7A9BE; font-size: 14px; margin-top: 12px; }
+  .loading-text { color: var(--text-2); font-size: 14px; margin-top: 12px; }
 
-  /* Result */
-  #cardResult { display: none; padding: 24px; margin-top: 16px; }
-  .verdict-row { display: flex; align-items: center; }
-  .verdict-emoji { font-size: 36px; }
-  .verdict-info { margin-left: 16px; }
-  .verdict { font-size: 28px; font-weight: 700; }
-  .confidence-text { color: #A7A9BE; font-size: 14px; }
-  .conf-label { color: #A7A9BE; font-size: 11px; letter-spacing: 1px; margin-top: 20px; }
-  .bar-track {
-    height: 12px; background: #2D2B55; border-radius: 6px;
-    margin-top: 8px; overflow: hidden;
+  /* Result card */
+  #cardResult { display: none; margin-top: 16px; padding: 20px; background: var(--card); border: 1px solid var(--border); border-radius: 24px; }
+  .result-top { display: flex; align-items: center; }
+  .gauge-wrap { position: relative; width: 116px; height: 116px; flex-shrink: 0; }
+  .gauge-wrap svg { transform: rotate(135deg); }
+  .gauge-track, .gauge-fill {
+    fill: none; stroke-width: 9; stroke-linecap: round;
   }
-  .bar-fill { height: 100%; width: 94%; background: #6C63FF; border-radius: 6px; transition: width .6s ease; }
-  .raw-score { color: #A7A9BE; font-size: 12px; font-family: monospace; margin-top: 12px; }
+  .gauge-track { stroke: var(--border); }
+  .gauge-fill {
+    stroke-dasharray: 245 326.73;
+    stroke-dashoffset: 245;
+    transition: stroke-dashoffset .9s cubic-bezier(.22,1,.36,1);
+  }
+  .gauge-fill.green { stroke: url(#gGradGreen); }
+  .gauge-fill.red { stroke: url(#gGradRed); }
+  .gauge-center {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .gauge-center .pct { font-size: 22px; font-weight: 800; color: var(--text); }
+  .gauge-center .pct-label { font-size: 8.5px; letter-spacing: 1px; color: var(--text-3); margin-top: 1px; }
+  .verdict-info { margin-left: 18px; }
+  .verdict-emoji { font-size: 30px; }
+  .verdict { font-size: 24px; font-weight: 700; }
+  .verdict.green { color: var(--green-bright); }
+  .verdict.red { color: var(--red); }
+  .strength { color: var(--text-2); font-size: 10.5px; letter-spacing: 1px; margin-top: 6px; }
+  .prob-text { color: var(--text-2); font-size: 12.5px; margin-top: 6px; }
+
+  .conf-label { color: var(--text-2); font-size: 11px; letter-spacing: 1.5px; margin-top: 20px; }
+  .bar-track { height: 12px; background: var(--border); border-radius: 6px; margin-top: 8px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0%; border-radius: 6px; transition: width .9s cubic-bezier(.22,1,.36,1); }
+  .bar-fill.green { background: var(--green); }
+  .bar-fill.red { background: var(--red); }
+  .bar-scale { display: flex; justify-content: space-between; color: var(--text-3); font-size: 10px; margin-top: 6px; }
+  .raw-score { color: var(--text-2); font-size: 11.5px; font-family: monospace; margin-top: 14px; }
   .msg {
-    color: #FFFFFE; font-size: 14px; line-height: 1.4;
-    background: #1E1E3A; border-radius: 10px; padding: 12px; margin-top: 12px;
+    color: var(--text); font-size: 14px; line-height: 1.35;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px; margin-top: 12px;
   }
+
+  /* History */
+  .history-head { display: flex; align-items: center; margin-top: 24px; }
+  .history-head .section-label { flex: 1; }
+  #btnClearHistory { display: none; background: none; border: none; color: var(--green-bright); font-size: 12px; cursor: pointer; font-family: inherit; padding: 6px; }
+  #historyList { display: none; margin-top: 10px; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+  #historyList::-webkit-scrollbar { display: none; }
+  .history-item { width: 104px; flex-shrink: 0; cursor: pointer; }
+  .history-item .thumb {
+    width: 104px; height: 104px; border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--border); background: var(--card);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .history-item .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .history-item .thumb .noimg { color: var(--text-3); font-size: 24px; }
+  .history-item .meta { display: flex; justify-content: space-between; align-items: center; margin-top: 7px; }
+  .history-item .meta .hl { font-size: 12px; font-weight: 700; }
+  .history-item .meta .hl.green { color: var(--green-bright); }
+  .history-item .meta .hl.red { color: var(--red); }
+  .history-item .meta .hc { font-size: 10px; color: var(--text-2); }
+  #historyEmpty { display: none; color: var(--text-3); font-size: 12.5px; margin-top: 10px; }
+
   .bottom-pad { height: 32px; }
 
-  .real .verdict, .real .bar-fill { color: #00F5A0; background-color: #00F5A0; }
-  .fake .verdict, .fake .bar-fill { color: #FF4757; background-color: #FF4757; }
-  #cardResult.real .verdict { color: #00F5A0; }
-  #cardResult.fake .verdict { color: #FF4757; }
-  #cardResult.real .bar-fill { background: #00F5A0; }
-  #cardResult.fake .bar-fill { background: #FF4757; }
+  /* Bottom sheet */
+  .sheet-overlay {
+    position: absolute; inset: 0; background: rgba(0,0,0,.6);
+    display: none; z-index: 20; align-items: flex-end;
+  }
+  .sheet-overlay.show { display: flex; }
+  .sheet {
+    width: 100%; background: var(--surface);
+    border-radius: 24px 24px 0 0; padding: 24px 24px 40px;
+    animation: slideUp .28s cubic-bezier(.22,1,.36,1);
+  }
+  @keyframes slideUp { from { transform: translateY(60px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .sheet h3 { color: var(--text); font-size: 20px; font-weight: 700; }
+  .sheet .s-sub { color: var(--text-2); font-size: 12.5px; margin-top: 4px; }
+  .sheet-option {
+    display: flex; align-items: center; margin-top: 12px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px; cursor: pointer; transition: border-color .15s;
+  }
+  .sheet-option:first-of-type { margin-top: 20px; }
+  .sheet-option:hover { border-color: var(--green); }
+  .sheet-option .so-emoji { font-size: 26px; }
+  .sheet-option .so-text { flex: 1; margin-left: 14px; }
+  .sheet-option .so-title { color: var(--text); font-size: 15px; font-weight: 700; }
+  .sheet-option .so-desc { color: var(--text-2); font-size: 11.5px; margin-top: 1px; }
+  .sheet-option .so-arrow { color: var(--green-bright); font-size: 18px; }
 
   /* Toast */
   #toast {
     position: absolute; left: 50%; bottom: 40px; transform: translateX(-50%);
-    background: #2D2B55; color: #FFFFFE; padding: 12px 18px; border-radius: 8px;
-    font-size: 13px; display: none; white-space: nowrap; z-index: 10;
+    background: var(--card-elev); color: var(--text); padding: 12px 18px; border-radius: 10px;
+    font-size: 13px; display: none; white-space: nowrap; z-index: 30;
+    border: 1px solid var(--border-strong);
   }
-  .hint { text-align: center; color: #5A5A7A; font-size: 12px; margin-top: 16px; }
+  .hint { text-align: center; color: var(--text-3); font-size: 12px; margin-top: 16px; }
 </style>
 </head>
 <body>
@@ -144,140 +239,356 @@
   <div class="screen">
 
     <div class="header">
-      <div class="title">DeepGuard</div>
-      <div class="subtitle">AI-Powered Deepfake Detector</div>
-    </div>
-
-    <!-- Preview card -->
-    <div class="card preview-card">
-      <div class="placeholder" id="layoutPlaceholder">
-        <div class="emoji">📸</div>
-        <div class="line1">Tap below to select an image</div>
-        <div class="line2">Works with photos, screenshots, AI-generated faces</div>
+      <div class="logo-badge">🛡</div>
+      <div class="header-text">
+        <div class="title">DeepGuard</div>
+        <div class="subtitle">AI-Powered Deepfake Detector</div>
       </div>
-      <img id="imagePreview" alt="Selected photo">
     </div>
 
-    <div class="row">
-      <button class="btn" id="btnGallery">📁&nbsp;&nbsp;Gallery</button>
-      <button class="btn" id="btnCamera">📷&nbsp;&nbsp;Camera</button>
+    <div class="section-label">CHOOSE MEDIA TYPE</div>
+    <div class="mode-row">
+      <div class="mode-card selected" id="modePhoto">
+        <div class="m-emoji">🖼️</div>
+        <div class="m-label">Photo</div>
+        <div class="m-sub">Images &amp; screenshots</div>
+      </div>
+      <div class="mode-card" id="modeVideo">
+        <div class="m-emoji">🎬</div>
+        <div class="m-label">Video</div>
+        <div class="m-sub">Clips &amp; recordings</div>
+      </div>
     </div>
 
-    <button class="btn-primary" id="btnAnalyze" disabled>🔍&nbsp;&nbsp;Analyze Image</button>
+    <!-- Preview -->
+    <div class="preview-card">
+      <div class="placeholder" id="layoutPlaceholder">
+        <div class="emoji">🕵️</div>
+        <div class="line1" id="phTitle">Choose a Photo</div>
+        <div class="line2">Tap Photo or Video above, then pick Camera or Gallery</div>
+      </div>
+      <img id="imagePreview" alt="Selected media">
+      <div class="chip" id="sourceChip">GALLERY</div>
+      <button class="remove-btn" id="btnRemove">✕</button>
+    </div>
+
+    <button class="btn-primary" id="btnAnalyze" disabled>🔍&nbsp;&nbsp;ANALYZE NOW</button>
 
     <div class="input-wrap">
-      <label>Server IP</label>
       <input class="input" id="etServerIp" value="10.0.2.2:5000">
     </div>
 
     <!-- Loading -->
     <div id="layoutLoading">
       <div class="spinner"></div>
-      <div class="loading-text">Analyzing with AI...</div>
+      <div class="loading-text">Analyzing media with AI…</div>
     </div>
 
     <!-- Result -->
-    <div class="card" id="cardResult">
-      <div class="verdict-row">
-        <div class="verdict-emoji" id="tvEmoji">✅</div>
+    <div id="cardResult">
+      <div class="result-top">
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 120 120">
+            <defs>
+              <linearGradient id="gGradGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#34D399"/>
+                <stop offset="100%" stop-color="#059669"/>
+              </linearGradient>
+              <linearGradient id="gGradRed" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#F87171"/>
+                <stop offset="100%" stop-color="#B91C1C"/>
+              </linearGradient>
+            </defs>
+            <circle class="gauge-track" cx="60" cy="60" r="52"/>
+            <circle class="gauge-fill" id="gaugeFill" cx="60" cy="60" r="52"/>
+          </svg>
+          <div class="gauge-center">
+            <div class="pct" id="gaugePct">0%</div>
+            <div class="pct-label">CONFIDENCE</div>
+          </div>
+        </div>
         <div class="verdict-info">
-          <div class="verdict" id="tvVerdict">REAL</div>
-          <div class="confidence-text" id="tvConfidence">94.2% confidence</div>
+          <div class="verdict-emoji" id="tvEmoji">✅</div>
+          <div class="verdict green" id="tvVerdict">REAL</div>
+          <div class="strength" id="tvStrength">HIGH CONFIDENCE</div>
+          <div class="prob-text" id="tvConfidence">94.2% probability this is REAL</div>
         </div>
       </div>
-      <div class="conf-label">CONFIDENCE SCORE</div>
-      <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
-      <div class="raw-score" id="tvRawScore">Raw model score: 0.9423</div>
+      <div class="conf-label">MODEL CONFIDENCE</div>
+      <div class="bar-track"><div class="bar-fill green" id="barFill"></div></div>
+      <div class="bar-scale"><span>0%</span><span>50%</span><span>100%</span></div>
+      <div class="raw-score" id="tvRawScore">Model output (raw): 0.9423</div>
       <div class="msg" id="tvMessage">This image appears to be authentic with high confidence.</div>
     </div>
 
+    <!-- History -->
+    <div class="history-head">
+      <div class="section-label">RECENT SCANS</div>
+      <button id="btnClearHistory">🗑&nbsp;&nbsp;Clear</button>
+    </div>
+    <div id="historyList"></div>
+    <div id="historyEmpty">No scans yet — analyze a photo or video to build your history.</div>
+
     <div class="bottom-pad"></div>
-    <div class="hint">Demo: 📁 Gallery opens your real files, 📷 Camera opens the camera — then tap Analyze. Results are simulated.</div>
-    <div class="hint">No image handy? <button id="btnSample" style="background:none;border:none;color:#6C63FF;cursor:pointer;font-size:12px;font-family:inherit;text-decoration:underline;">Use a sample photo</button></div>
+    <div class="hint">Demo: Photo/Video → Camera or Gallery → Analyze. Results are simulated.</div>
+    <div class="hint">No media handy? <button id="btnSample" style="background:none;border:none;color:#4ADE80;cursor:pointer;font-size:12px;font-family:inherit;text-decoration:underline;">Use a sample photo</button></div>
     <div class="bottom-pad"></div>
   </div>
+
+  <!-- Bottom sheet -->
+  <div class="sheet-overlay" id="sheetOverlay">
+    <div class="sheet">
+      <h3 id="sheetTitle">Add photo</h3>
+      <div class="s-sub">Choose where to get it from</div>
+      <div class="sheet-option" id="sheetCamera">
+        <div class="so-emoji" id="sheetCameraIcon">📷</div>
+        <div class="so-text">
+          <div class="so-title" id="sheetCameraTitle">Camera</div>
+          <div class="so-desc" id="sheetCameraDesc">Capture right now</div>
+        </div>
+        <div class="so-arrow">→</div>
+      </div>
+      <div class="sheet-option" id="sheetGallery">
+        <div class="so-emoji" id="sheetGalleryIcon">🖼️</div>
+        <div class="so-text">
+          <div class="so-title">Gallery</div>
+          <div class="so-desc" id="sheetGalleryDesc">Pick an image from your device</div>
+        </div>
+        <div class="so-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
   <div id="toast"></div>
 </div>
 
 <input type="file" id="fileGallery" accept="image/*" hidden>
 <input type="file" id="fileCamera" accept="image/*" capture="environment" hidden>
+<input type="file" id="fileVideoGallery" accept="video/*" hidden>
+<input type="file" id="fileVideoCamera" accept="video/*" capture="environment" hidden>
 
 <script>
-  const placeholder = document.getElementById('layoutPlaceholder');
-  const imagePreview = document.getElementById('imagePreview');
-  const btnAnalyze = document.getElementById('btnAnalyze');
-  const loading = document.getElementById('layoutLoading');
-  const cardResult = document.getElementById('cardResult');
-  const toast = document.getElementById('toast');
-  let imageSelected = false;
+  const $ = id => document.getElementById(id);
+
+  const placeholder = $('layoutPlaceholder');
+  const imagePreview = $('imagePreview');
+  const sourceChip = $('sourceChip');
+  const btnRemove = $('btnRemove');
+  const btnAnalyze = $('btnAnalyze');
+  const loading = $('layoutLoading');
+  const cardResult = $('cardResult');
+  const toast = $('toast');
+  const historyList = $('historyList');
+  const historyEmpty = $('historyEmpty');
+  const btnClearHistory = $('btnClearHistory');
+
+  let currentMode = 'photo';
+  let mediaSrc = null;        // dataURL / blob URL of selected media
+  let mediaSourceLabel = '';
   let cycle = 0;
+
+  // ── History (persisted) ──
+  let history = [];
+  try { history = JSON.parse(localStorage.getItem('deepguard_history') || '[]'); } catch (e) { history = []; }
 
   const SAMPLE_SVG =
     'data:image/svg+xml;utf8,' + encodeURIComponent(
-      '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="280">' +
+      '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300">' +
       '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
-      '<stop offset="0%" stop-color="#1A1A2E"/><stop offset="100%" stop-color="#6C63FF"/>' +
+      '<stop offset="0%" stop-color="#101412"/><stop offset="100%" stop-color="#1FA971"/>' +
       '</linearGradient></defs>' +
-      '<rect width="400" height="280" fill="url(#g)"/>' +
-      '<circle cx="200" cy="110" r="48" fill="#FFFFFE" opacity=".9"/>' +
-      '<path d="M140 230 q60 -70 120 0 Z" fill="#16213E"/>' +
+      '<rect width="400" height="300" fill="url(#g)"/>' +
+      '<circle cx="200" cy="120" r="52" fill="#F1F6F3" opacity=".9"/>' +
+      '<path d="M140 250 q60 -80 120 0 Z" fill="#14241B"/>' +
       '</svg>'
     );
 
   function showToast(msg) {
     toast.textContent = msg;
     toast.style.display = 'block';
-    setTimeout(() => toast.style.display = 'none', 2200);
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.style.display = 'none', 2200);
   }
 
-  function showImage(src) {
+  function saveHistory() {
+    try { localStorage.setItem('deepguard_history', JSON.stringify(history)); } catch (e) {}
+  }
+
+  function renderHistory() {
+    historyList.innerHTML = '';
+    const has = history.length > 0;
+    historyList.style.display = has ? 'flex' : 'none';
+    historyEmpty.style.display = has ? 'none' : 'block';
+    btnClearHistory.style.display = has ? 'block' : 'none';
+    history.forEach((h, i) => {
+      const item = document.createElement('div');
+      item.className = 'history-item';
+      item.innerHTML =
+        '<div class="thumb">' + (h.thumb ? '<img src="' + h.thumb + '">' : '<div class="noimg">🖼️</div>') + '</div>' +
+        '<div class="meta"><span class="hl ' + (h.label === 'REAL' ? 'green' : 'red') + '">' + h.label + '</span>' +
+        '<span class="hc">' + h.conf + '%</span></div>';
+      item.onclick = () => restoreEntry(h);
+      historyList.appendChild(item);
+    });
+  }
+
+  // ── Mode selection ──
+  function selectMode(mode) {
+    currentMode = mode;
+    $('modePhoto').classList.toggle('selected', mode === 'photo');
+    $('modeVideo').classList.toggle('selected', mode === 'video');
+    $('phTitle').textContent = 'Choose a ' + mode;
+  }
+  $('modePhoto').onclick = () => openSheet('photo');
+  $('modeVideo').onclick = () => openSheet('video');
+
+  // ── Bottom sheet ──
+  function openSheet(mode) {
+    selectMode(mode);
+    const isPhoto = mode === 'photo';
+    $('sheetTitle').textContent = 'Add ' + mode;
+    $('sheetCameraIcon').textContent = isPhoto ? '📷' : '🎥';
+    $('sheetCameraTitle').textContent = isPhoto ? 'Camera' : 'Record';
+    $('sheetCameraDesc').textContent = isPhoto ? 'Capture right now' : 'Record a short clip';
+    $('sheetGalleryIcon').textContent = isPhoto ? '🖼️' : '📂';
+    $('sheetGalleryDesc').textContent = isPhoto ? 'Pick an image from your device' : 'Pick a video from your device';
+    $('sheetOverlay').classList.add('show');
+  }
+  $('sheetOverlay').onclick = e => { if (e.target === $('sheetOverlay')) $('sheetOverlay').classList.remove('show'); };
+  $('sheetCamera').onclick = () => {
+    $('sheetOverlay').classList.remove('show');
+    (currentMode === 'photo' ? $('fileCamera') : $('fileVideoCamera')).click();
+  };
+  $('sheetGallery').onclick = () => {
+    $('sheetOverlay').classList.remove('show');
+    (currentMode === 'photo' ? $('fileGallery') : $('fileVideoGallery')).click();
+  };
+
+  // ── Media loading ──
+  function showMedia(src, label) {
     placeholder.style.display = 'none';
     imagePreview.src = src;
     imagePreview.style.display = 'block';
-    imageSelected = true;
+    sourceChip.textContent = label;
+    sourceChip.style.display = 'block';
+    btnRemove.style.display = 'block';
     btnAnalyze.disabled = false;
     cardResult.style.display = 'none';
   }
 
-  function loadFile(file) {
+  function loadImageFile(file) {
     const reader = new FileReader();
-    reader.onload = () => showImage(reader.result);
+    reader.onload = () => {
+      mediaSrc = reader.result;
+      showMedia(mediaSrc, currentMode === 'photo' ? 'GALLERY' : 'VIDEO GALLERY');
+    };
     reader.readAsDataURL(file);
   }
 
-  const fileGallery = document.getElementById('fileGallery');
-  const fileCamera = document.getElementById('fileCamera');
+  function loadVideoFile(file) {
+    const url = URL.createObjectURL(file);
+    const video = document.createElement('video');
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = 'auto';
+    video.src = url;
+    video.onloadeddata = () => {
+      const t = Math.min(0.6, (video.duration || 1) / 2);
+      video.currentTime = t;
+    };
+    video.onseeked = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth || 400;
+      canvas.height = video.videoHeight || 300;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+      URL.revokeObjectURL(url);
+      mediaSrc = canvas.toDataURL('image/jpeg', 0.9);
+      showMedia(mediaSrc, currentMode === 'photo' ? 'CAMERA' : 'CAMERA VIDEO');
+    };
+    video.onerror = () => { URL.revokeObjectURL(url); showToast('Could not read this video'); };
+  }
 
-  document.getElementById('btnGallery').addEventListener('click', () => fileGallery.click());
-  document.getElementById('btnCamera').addEventListener('click', () => fileCamera.click());
-
-  function wireFileInput(input) {
+  function wireFileInput(input, handler) {
     input.addEventListener('change', () => {
-      if (input.files && input.files[0]) loadFile(input.files[0]);
+      if (input.files && input.files[0]) handler(input.files[0]);
       input.value = '';
     });
   }
-  wireFileInput(fileGallery);
-  wireFileInput(fileCamera);
+  wireFileInput($('fileGallery'), loadImageFile);
+  wireFileInput($('fileCamera'), loadImageFile);
+  wireFileInput($('fileVideoGallery'), loadVideoFile);
+  wireFileInput($('fileVideoCamera'), loadVideoFile);
 
-  document.getElementById('btnSample').addEventListener('click', () => showImage(SAMPLE_SVG));
+  $('btnSample').onclick = () => {
+    mediaSrc = SAMPLE_SVG;
+    showMedia(SAMPLE_SVG, 'SAMPLE');
+  };
 
-  btnAnalyze.addEventListener('click', () => {
-    if (!imageSelected) { showToast('Select an image first'); return; }
+  btnRemove.onclick = () => {
+    mediaSrc = null;
+    placeholder.style.display = 'block';
+    imagePreview.style.display = 'none';
+    sourceChip.style.display = 'none';
+    btnRemove.style.display = 'none';
+    btnAnalyze.disabled = true;
+    cardResult.style.display = 'none';
+  };
+
+  // ── Gauge helpers ──
+  const gaugeFill = $('gaugeFill');
+  const GAUGE_LEN = 245; // 270° of r=52 circle
+  function setGauge(percent, isReal) {
+    gaugeFill.classList.remove('green', 'red');
+    gaugeFill.classList.add(isReal ? 'green' : 'red');
+    requestAnimationFrame(() => {
+      gaugeFill.style.strokeDashoffset = GAUGE_LEN * (1 - percent / 100);
+    });
+    $('gaugePct').textContent = Math.round(percent) + '%';
+  }
+
+  function strengthLabel(conf) {
+    if (conf >= 90) return 'VERY HIGH CONFIDENCE';
+    if (conf >= 75) return 'HIGH CONFIDENCE';
+    if (conf >= 60) return 'MODERATE CONFIDENCE';
+    return 'LOW CONFIDENCE';
+  }
+
+  // ── Result display ──
+  function displayResult(r) {
+    cardResult.style.display = 'block';
+    const isReal = r.label === 'REAL';
+    $('tvEmoji').textContent = r.emoji;
+    $('tvVerdict').textContent = r.label;
+    $('tvVerdict').className = 'verdict ' + (isReal ? 'green' : 'red');
+    $('tvStrength').textContent = strengthLabel(r.conf);
+    $('tvConfidence').textContent = r.conf.toFixed(1) + '% probability this is ' + r.label;
+    $('tvRawScore').textContent = 'Model output (raw): ' + r.raw.toFixed(4);
+    $('tvMessage').textContent = r.msg;
+    setGauge(r.conf, isReal);
+    const bar = $('barFill');
+    bar.classList.remove('green', 'red');
+    bar.classList.add(isReal ? 'green' : 'red');
+    requestAnimationFrame(() => { bar.style.width = r.conf + '%'; });
+    cardResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ── Analyze ──
+  btnAnalyze.onclick = () => {
+    if (!mediaSrc) { showToast('Select media first'); return; }
     cardResult.style.display = 'none';
     loading.style.display = 'block';
     btnAnalyze.disabled = true;
 
     const results = [
       {
-        label: 'FAKE', emoji: '🚨', conf: '91.7% confidence', raw: 'Raw model score: 0.0834',
-        msg: 'This image shows strong signs of AI manipulation — facial artifacts, inconsistent lighting, and unnatural skin texture were detected.',
-        cls: 'fake'
+        label: 'FAKE', emoji: '🚨', conf: 91.7, raw: 0.0834,
+        msg: 'This media shows strong signs of AI manipulation — facial artifacts, inconsistent lighting, and unnatural skin texture were detected.',
+        cls: 'red'
       },
       {
-        label: 'REAL', emoji: '✅', conf: '94.2% confidence', raw: 'Raw model score: 0.9423',
-        msg: 'This image appears to be authentic with high confidence. No significant manipulation artifacts were found.',
-        cls: 'real'
+        label: 'REAL', emoji: '✅', conf: 94.2, raw: 0.9423,
+        msg: 'This media appears to be authentic with high confidence. No significant manipulation artifacts were found.',
+        cls: 'green'
       }
     ];
 
@@ -285,16 +596,34 @@
       loading.style.display = 'none';
       const r = results[cycle % results.length];
       cycle++;
-      cardResult.className = 'card ' + r.cls;
-      document.getElementById('tvEmoji').textContent = r.emoji;
-      document.getElementById('tvVerdict').textContent = r.label;
-      document.getElementById('tvConfidence').textContent = r.conf;
-      document.getElementById('tvRawScore').textContent = r.raw;
-      document.getElementById('tvMessage').textContent = r.msg;
-      cardResult.style.display = 'block';
+      displayResult(r);
+
+      history.unshift({
+        thumb: mediaSrc, label: r.label, conf: Math.round(r.conf),
+        emoji: r.emoji, raw: r.raw, msg: r.msg, mode: currentMode, source: sourceChip.textContent
+      });
+      history = history.slice(0, 30);
+      saveHistory();
+      renderHistory();
       btnAnalyze.disabled = false;
     }, 1400);
-  });
+  };
+
+  function restoreEntry(h) {
+    mediaSrc = h.thumb;
+    showMedia(h.thumb, h.source || (h.mode === 'video' ? 'VIDEO' : 'PHOTO'));
+    displayResult({ label: h.label, emoji: h.emoji, conf: h.conf, raw: h.raw, msg: h.msg });
+    selectMode(h.mode === 'video' ? 'video' : 'photo');
+  }
+
+  btnClearHistory.onclick = () => {
+    history = [];
+    saveHistory();
+    renderHistory();
+    showToast('History cleared');
+  };
+
+  renderHistory();
 </script>
 </body>
 </html>
