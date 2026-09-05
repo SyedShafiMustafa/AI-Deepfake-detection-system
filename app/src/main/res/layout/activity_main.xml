@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="24dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DeepGuard"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AI-Powered Deepfake Detector"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- Image Preview Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardPreview"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginTop="8dp"
+            app:cardBackgroundColor="@color/colorCard"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- Placeholder state -->
+                <LinearLayout
+                    android:id="@+id/layoutPlaceholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📸"
+                        android:textSize="48sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tap below to select an image"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="15sp"
+                        android:layout_marginTop="12dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Works with photos, screenshots, AI-generated faces"
+                        android:textColor="#5A5A7A"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:layout_marginTop="6dp"
+                        android:paddingHorizontal="24dp"/>
+                </LinearLayout>
+
+                <!-- Selected image -->
+                <ImageView
+                    android:id="@+id/imagePreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/btnGallery"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="📁  Gallery"
+                android:textColor="@color/colorTextPrimary"
+                android:backgroundTint="@color/colorCard"
+                android:textSize="15sp"
+                style="@style/Widget.MaterialComponents.Button"/>
+
+            <Button
+                android:id="@+id/btnCamera"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="📷  Camera"
+                android:textColor="@color/colorTextPrimary"
+                android:backgroundTint="@color/colorCard"
+                android:textSize="15sp"
+                style="@style/Widget.MaterialComponents.Button"/>
+        </LinearLayout>
+
+        <!-- Analyze Button -->
+        <Button
+            android:id="@+id/btnAnalyze"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="12dp"
+            android:text="🔍  Analyze Image"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextPrimary"
+            android:backgroundTint="@color/colorPrimary"
+            android:enabled="false"
+            style="@style/Widget.MaterialComponents.Button"/>
+
+        <!-- Server IP input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:boxBackgroundColor="@color/colorCard"
+            app:boxStrokeColor="@color/colorBorder"
+            app:hintTextColor="@color/colorTextSecondary"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etServerIp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Server IP (e.g. 192.168.1.5:5000)"
+                android:textColor="@color/colorTextPrimary"
+                android:inputType="text"
+                android:text="10.0.2.2:5000"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Loading indicator -->
+        <LinearLayout
+            android:id="@+id/layoutLoading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:indeterminateTint="@color/colorPrimary"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Analyzing with AI..."
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="14sp"
+                android:layout_marginTop="12dp"/>
+        </LinearLayout>
+
+        <!-- Result Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/colorCard"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <!-- Verdict badge -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tvVerdictEmoji"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="36sp"
+                        android:text="✅"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:id="@+id/tvVerdict"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="REAL"
+                            android:textSize="28sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorRealGreen"/>
+
+                        <TextView
+                            android:id="@+id/tvConfidence"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="94.2% confidence"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Confidence bar -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CONFIDENCE SCORE"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.1"
+                    android:layout_marginTop="20dp"/>
+
+                <ProgressBar
+                    android:id="@+id/progressConfidence"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="8dp"
+                    android:progressDrawable="@drawable/confidence_bar"
+                    android:max="100"
+                    android:progress="94"/>
+
+                <!-- Raw score detail -->
+                <TextView
+                    android:id="@+id/tvRawScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Raw model score: 0.9423"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:layout_marginTop="12dp"/>
+
+                <TextView
+                    android:id="@+id/tvMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="This image appears to be authentic with high confidence."
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="14sp"
+                    android:lineSpacingMultiplier="1.4"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/message_bg"
+                    android:padding="12dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Bottom padding -->
+        <View android:layout_width="match_parent" android:layout_height="32dp"/>
+
+    </LinearLayout>
+</ScrollView>

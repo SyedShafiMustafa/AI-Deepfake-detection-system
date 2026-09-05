@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeepGuard — App Preview</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, "Segoe UI", Roboto, sans-serif; }
+
+  body {
+    background: #0a0912;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  /* Phone frame */
+  .phone {
+    width: 400px;
+    background: #0F0E17;
+    border-radius: 40px;
+    border: 1px solid #2D2B55;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6);
+    overflow: hidden;
+    position: relative;
+  }
+  .notch {
+    height: 28px;
+    background: #0F0E17;
+  }
+  .screen {
+    padding: 20px;
+    max-height: 780px;
+    overflow-y: auto;
+  }
+  .screen::-webkit-scrollbar { width: 0; }
+
+  .header { padding: 24px 0 16px; }
+  .title { color: #FFFFFE; font-size: 32px; font-weight: 700; }
+  .subtitle { color: #6C63FF; font-size: 14px; margin-top: 4px; }
+
+  /* Card */
+  .card {
+    background: #16213E;
+    border-radius: 20px;
+    margin-top: 8px;
+  }
+  .preview-card {
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .placeholder { text-align: center; }
+  .placeholder .emoji { font-size: 48px; }
+  .placeholder .line1 { color: #A7A9BE; font-size: 15px; margin-top: 12px; }
+  .placeholder .line2 { color: #5A5A7A; font-size: 12px; margin-top: 6px; padding: 0 24px; }
+  #imagePreview {
+    display: none;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  /* Buttons */
+  .row { display: flex; gap: 8px; margin-top: 16px; }
+  .btn {
+    flex: 1; height: 56px; border: none; border-radius: 8px;
+    background: #16213E; color: #FFFFFE; font-size: 15px;
+    cursor: pointer; font-family: inherit;
+  }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-primary {
+    width: 100%; height: 60px; margin-top: 12px;
+    background: #6C63FF; color: #FFFFFE;
+    font-size: 17px; font-weight: 700; border: none; border-radius: 8px;
+    cursor: pointer; font-family: inherit;
+  }
+  .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+
+  /* Server IP input */
+  .input-wrap { margin-top: 16px; }
+  .input-wrap label { display: block; color: #A7A9BE; font-size: 12px; margin-bottom: 4px; }
+  .input {
+    width: 100%; height: 48px; background: #16213E; color: #FFFFFE;
+    border: 1px solid #2D2B55; border-radius: 8px; padding: 0 14px; font-size: 14px;
+    font-family: inherit;
+  }
+  .input:focus { outline: 1px solid #6C63FF; }
+
+  /* Loading */
+  #layoutLoading { display: none; text-align: center; padding: 24px; }
+  .spinner {
+    width: 48px; height: 48px; margin: 0 auto;
+    border: 4px solid #2D2B55; border-top-color: #6C63FF;
+    border-radius: 50%; animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { color: #A7A9BE; font-size: 14px; margin-top: 12px; }
+
+  /* Result */
+  #cardResult { display: none; padding: 24px; margin-top: 16px; }
+  .verdict-row { display: flex; align-items: center; }
+  .verdict-emoji { font-size: 36px; }
+  .verdict-info { margin-left: 16px; }
+  .verdict { font-size: 28px; font-weight: 700; }
+  .confidence-text { color: #A7A9BE; font-size: 14px; }
+  .conf-label { color: #A7A9BE; font-size: 11px; letter-spacing: 1px; margin-top: 20px; }
+  .bar-track {
+    height: 12px; background: #2D2B55; border-radius: 6px;
+    margin-top: 8px; overflow: hidden;
+  }
+  .bar-fill { height: 100%; width: 94%; background: #6C63FF; border-radius: 6px; transition: width .6s ease; }
+  .raw-score { color: #A7A9BE; font-size: 12px; font-family: monospace; margin-top: 12px; }
+  .msg {
+    color: #FFFFFE; font-size: 14px; line-height: 1.4;
+    background: #1E1E3A; border-radius: 10px; padding: 12px; margin-top: 12px;
+  }
+  .bottom-pad { height: 32px; }
+
+  .real .verdict, .real .bar-fill { color: #00F5A0; background-color: #00F5A0; }
+  .fake .verdict, .fake .bar-fill { color: #FF4757; background-color: #FF4757; }
+  #cardResult.real .verdict { color: #00F5A0; }
+  #cardResult.fake .verdict { color: #FF4757; }
+  #cardResult.real .bar-fill { background: #00F5A0; }
+  #cardResult.fake .bar-fill { background: #FF4757; }
+
+  /* Toast */
+  #toast {
+    position: absolute; left: 50%; bottom: 40px; transform: translateX(-50%);
+    background: #2D2B55; color: #FFFFFE; padding: 12px 18px; border-radius: 8px;
+    font-size: 13px; display: none; white-space: nowrap; z-index: 10;
+  }
+  .hint { text-align: center; color: #5A5A7A; font-size: 12px; margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="notch"></div>
+  <div class="screen">
+
+    <div class="header">
+      <div class="title">DeepGuard</div>
+      <div class="subtitle">AI-Powered Deepfake Detector</div>
+    </div>
+
+    <!-- Preview card -->
+    <div class="card preview-card">
+      <div class="placeholder" id="layoutPlaceholder">
+        <div class="emoji">📸</div>
+        <div class="line1">Tap below to select an image</div>
+        <div class="line2">Works with photos, screenshots, AI-generated faces</div>
+      </div>
+      <svg id="imagePreview" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#1A1A2E"/>
+            <stop offset="100%" stop-color="#6C63FF"/>
+          </linearGradient>
+        </defs>
+        <rect width="400" height="280" fill="url(#g)"/>
+        <circle cx="200" cy="110" r="48" fill="#FFFFFE" opacity=".9"/>
+        <path d="M140 230 q60 -70 120 0 Z" fill="#16213E"/>
+      </svg>
+    </div>
+
+    <div class="row">
+      <button class="btn" id="btnGallery">📁&nbsp;&nbsp;Gallery</button>
+      <button class="btn" id="btnCamera">📷&nbsp;&nbsp;Camera</button>
+    </div>
+
+    <button class="btn-primary" id="btnAnalyze" disabled>🔍&nbsp;&nbsp;Analyze Image</button>
+
+    <div class="input-wrap">
+      <label>Server IP</label>
+      <input class="input" id="etServerIp" value="10.0.2.2:5000">
+    </div>
+
+    <!-- Loading -->
+    <div id="layoutLoading">
+      <div class="spinner"></div>
+      <div class="loading-text">Analyzing with AI...</div>
+    </div>
+
+    <!-- Result -->
+    <div class="card" id="cardResult">
+      <div class="verdict-row">
+        <div class="verdict-emoji" id="tvEmoji">✅</div>
+        <div class="verdict-info">
+          <div class="verdict" id="tvVerdict">REAL</div>
+          <div class="confidence-text" id="tvConfidence">94.2% confidence</div>
+        </div>
+      </div>
+      <div class="conf-label">CONFIDENCE SCORE</div>
+      <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+      <div class="raw-score" id="tvRawScore">Raw model score: 0.9423</div>
+      <div class="msg" id="tvMessage">This image appears to be authentic with high confidence.</div>
+    </div>
+
+    <div class="bottom-pad"></div>
+    <div class="hint">Interactive demo — tap Gallery, then Analyze. Result alternates REAL / FAKE.</div>
+    <div class="bottom-pad"></div>
+  </div>
+  <div id="toast"></div>
+</div>
+
+<script>
+  const placeholder = document.getElementById('layoutPlaceholder');
+  const imagePreview = document.getElementById('imagePreview');
+  const btnAnalyze = document.getElementById('btnAnalyze');
+  const loading = document.getElementById('layoutLoading');
+  const cardResult = document.getElementById('cardResult');
+  const toast = document.getElementById('toast');
+  let imageSelected = false;
+  let cycle = 0;
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    setTimeout(() => toast.style.display = 'none', 2200);
+  }
+
+  document.getElementById('btnGallery').addEventListener('click', () => {
+    placeholder.style.display = 'none';
+    imagePreview.style.display = 'block';
+    imageSelected = true;
+    btnAnalyze.disabled = false;
+    cardResult.style.display = 'none';
+  });
+
+  document.getElementById('btnCamera').addEventListener('click', () => {
+    placeholder.style.display = 'none';
+    imagePreview.style.display = 'block';
+    imageSelected = true;
+    btnAnalyze.disabled = false;
+    cardResult.style.display = 'none';
+  });
+
+  btnAnalyze.addEventListener('click', () => {
+    if (!imageSelected) { showToast('Select an image first'); return; }
+    cardResult.style.display = 'none';
+    loading.style.display = 'block';
+    btnAnalyze.disabled = true;
+
+    const results = [
+      {
+        label: 'FAKE', emoji: '🚨', conf: '91.7% confidence', raw: 'Raw model score: 0.0834',
+        msg: 'This image shows strong signs of AI manipulation — facial artifacts, inconsistent lighting, and unnatural skin texture were detected.',
+        cls: 'fake'
+      },
+      {
+        label: 'REAL', emoji: '✅', conf: '94.2% confidence', raw: 'Raw model score: 0.9423',
+        msg: 'This image appears to be authentic with high confidence. No significant manipulation artifacts were found.',
+        cls: 'real'
+      }
+    ];
+
+    setTimeout(() => {
+      loading.style.display = 'none';
+      const r = results[cycle % results.length];
+      cycle++;
+      cardResult.className = 'card ' + r.cls;
+      document.getElementById('tvEmoji').textContent = r.emoji;
+      document.getElementById('tvVerdict').textContent = r.label;
+      document.getElementById('tvConfidence').textContent = r.conf;
+      document.getElementById('tvRawScore').textContent = r.raw;
+      document.getElementById('tvMessage').textContent = r.msg;
+      cardResult.style.display = 'block';
+      btnAnalyze.disabled = false;
+    }, 1400);
+  });
+</script>
+</body>
+</html>
